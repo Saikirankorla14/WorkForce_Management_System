@@ -1,0 +1,143 @@
+{% extends 'main/base.html' %} 
+{% load static %}
+{% block title %}Update Profile{% endblock %} 
+{% block content %}
+<div class="container my-5 container h-100">
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-lg-12 col-xl-8">
+      <div class="card text-black" style="border-radius: 25px">
+        <div class="card-body p-md-5">
+          <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+              <p class="text-center text-success h1 fw-bold">
+                Update Profile
+              </p>
+              <hr/>
+              <form method="post" enctype="multipart/form-data" action="{% url 'update_profile' %}">
+                {% csrf_token %} {% if form.errors %}
+                <div class="alert alert-danger">
+                  <strong>Error:</strong> Please check the following fields:
+                  <ul>
+                    {% for field in form %} {% for error in field.errors %}
+                    <li>{{ field.label_tag }}: {{ error }}</li>
+                    {% endfor %} {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+
+                <div class="d-flex flex-row align-items-center mb-4">
+                  <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                    <div class="form-outline flex-fill mb-0">
+                    {{ user_form.photo }}
+                    </div>
+                </div> 
+
+                <div class="d-flex flex-row align-items-center mb-4">
+                  <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                  <div class="form-outline flex-fill mb-0">
+                     {{ user_form.username }}
+                  </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-4">
+                  <i class="fas fa-calendar fa-lg me-3 fa-fw"></i>
+                  <div class="form-outline flex-fill mb-0">
+                   {{ user_form.birth_year }}
+                  </div>
+                </div>
+          
+                <div class="d-flex flex-row align-items-center mb-4">
+                  <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                  <div class="form-outline flex-fill mb-0">
+                    {{ user_form.email }}
+                  </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-3">
+                  <i class="fas fa-phone fa-lg me-3 fa-fw"></i>
+                  <div class="form-outline flex-fill mb-1" style="width: 59%;">
+                      {{ user_form.phone_number }}     
+                  </div>
+                  <div class="form-outline flex-fill mb-1 ms-1" style="width: 41%;">
+                      {{ user_form.phone_belongs_to_user }}
+                      <label for="{{ form.phone_belongs_to_user.id_for_label }}"></label>
+                  </div>
+                </div>
+
+                <div class="mb-3" id="relationshipField" style="display: none;">
+                    <input type="text" class="form-control" id="phoneOwner" name="phone_number_owner" placeholder="What is your relationship with the owner?" disabled>
+                </div>
+
+
+                    <div class="d-flex flex-row align-items-center mb-4">
+                    <i class="fas fa-map-marker-alt fa-lg me-3 fa-fw"></i>
+                    <div class="form-outline flex-fill mb-0">
+                      {{ user_form.district }} 
+                     <div class='mt-3'>
+                     {{ user_form.other_location }}
+                     </div>
+                    </div>
+                  </div>
+
+                     <div class="d-flex flex-row align-items-center mb-4">
+                      <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                      <div class="form-outline flex-fill mb-0">
+                      <label class='mb-2'>Are you a member of any Agriculture Groups/CBOs ? If yes which ?</label>
+                         {{ user_form.farmer_orgs }}
+                      </div>
+                    </div>
+
+                  <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                    <button type="submit" class="btn btn-success">Update Profile</button>
+                  </div>
+              </form>
+            </div>
+            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+              <!-- Display user avatar or default avatar -->
+                  {% if user.photo %}
+                      <div class="rounded-circle overflow-hidden me-2" style="width: 200px; height: 200px;">
+                          <img src="{{ user.photo.url }}" alt="User Photo" class="img-fluid w-100 h-100">
+                      </div>
+                  {% else %}
+                      <!-- Basic avatar or placeholder -->
+                      <div class="rounded-circle overflow-hidden me-2 d-flex justify-content-center align-items-center" style="width: 200px; height: 200px; background-color: #ddd;">
+                          <i class="fas fa-user fa-2x text-secondary"></i>
+                      </div>
+                  {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+ document.addEventListener('DOMContentLoaded', function () {
+        var phoneBelongsToUser = document.getElementById('{{ user_form.phone_belongs_to_user.id_for_label }}');
+        var relationshipField = document.getElementById('relationshipField');
+        var phoneOwnerInput = document.getElementById('phoneOwner');
+
+        phoneBelongsToUser.addEventListener('change', function () {
+            if (this.value === 'No') {
+                relationshipField.style.display = 'block';
+                phoneOwnerInput.disabled = false;
+            } else {
+                relationshipField.style.display = 'none';
+                phoneOwnerInput.disabled = true;
+            }
+        });
+
+        var districtField = document.getElementById('{{ user_form.district.id_for_label }}');
+        var otherLocationField = document.getElementById('{{ user_form.other_location.id_for_label }}');
+
+        districtField.addEventListener('change', function() {
+            var selectedOption = this.value;
+            otherLocationField.style.display = (selectedOption === 'Other') ? 'block' : 'none';
+        });
+
+        
+    });
+</script>
+{% endblock %}

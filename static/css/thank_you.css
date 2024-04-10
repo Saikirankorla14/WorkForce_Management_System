@@ -1,0 +1,66 @@
+/* thank_you.css */
+
+.content-body-apd {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.main-content {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    color: #333;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.thank-you-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #007BFF;
+}
+
+.thank-you-message {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.appointment-details-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 40px;
+    margin-left: 3px;
+    color: #333;
+}
+
+.appointment-details {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.appointment-details li {
+    font-size: 14px;
+    margin-bottom: 5px;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.appointment-details li:last-child {
+    margin-bottom: 0;
+}

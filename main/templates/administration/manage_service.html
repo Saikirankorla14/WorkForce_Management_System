@@ -1,0 +1,54 @@
+{% extends BASE_TEMPLATE %}
+{% load i18n %}
+{% load static %}
+
+{% block customCSS %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app_admin/btn.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app_admin/service.css' %}"/>
+{% endblock %}
+
+{% block body %}
+    <section class="content content-wrapper">
+        <div class="service-form-wrapper">
+            <div class="service-form-content">
+                <h2>{{ page_title }}</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {% if btn_text %}
+                        <button type="submit" class="btn btn-primary" >{{ btn_text }}</button>
+                    {% else %}
+                        {% if request.user.is_superuser and service.id %}
+                            <div class="service-btn-container">
+                                <a href="{% url 'update_service' service_id=service.id %}"
+                                   class="modify-btn button-color-blue service-btn">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <a href="javascript:void(0)"
+                                   onclick="showModal('{{ modal_title }}', '{{ d_modal_message }}', '{{ delete_btn_modal }}', '{% url 'appointment:delete_service' service_id=service.id %}', null)"
+                                   class="modify-btn button-color-red service-btn">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </form>
+                <br>
+                <a href="{% url 'admin_view' %}" class="btn btn-secondary">Go Back</a>
+                <div class="messages" style="margin: 20px 0">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-dismissible {% if message.tags %}alert-{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}danger{% else %}{{ message.tags }}{% endif %}{% endif %}"
+                                 role="alert">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block customJS %}
+    
+    <script src="{% static 'js/js-utils.js' %}"></script>
+{% endblock %}

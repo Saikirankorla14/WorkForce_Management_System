@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appointment Calendar</title>
+    <!-- Include FullCalendar.js CSS and JS files -->
+    <link href="{% static 'css/main.min.css' %}" rel="stylesheet">
+    <script src="{% static 'js/main.min.js' %}"></script>
+
+    <!-- Custom CSS styles for the calendar -->
+    <style>
+        /* Adjust the height and width of the calendar */
+        #calendar {
+            width: 80%; /* Adjust the width as needed */
+            margin: 0 auto; /* Center the calendar horizontally */
+        }
+    </style>
+</head>
+<body>
+    <div id="calendar"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: [
+                    {% for appointment_data in appointments_data %}
+                        {
+                            title: '{{ appointment_data.title }}',
+                            start: '{{ appointment_data.start }}',
+                            end: '{{ appointment_data.end }}'
+                            // Include additional fields as needed
+                        },
+                    {% endfor %}
+                ],
+                eventClick: function(info) {
+                    // Display appointment details when an event is clicked (you can customize this)
+                    alert('Appointment: ' + info.event.title + '\nStart Time: ' + info.event.start + '\nEnd Time: ' + info.event.end);
+                }
+            });
+
+            calendar.render();
+        });
+    </script>
+</body>
+</html>

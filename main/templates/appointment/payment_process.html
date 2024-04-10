@@ -1,0 +1,62 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        background-color: gray;
+    }
+</style>
+
+<div class="container bg-white shadow-md p-5" style="width:500px; border-radius:20px;">
+    <h3> <i class="fa fa-chevron-circle-right" aria-hidden="true"></i> &nbsp; Payment Options </h3>
+    <p> Please select your payment method below. </p>
+    <hr>
+    <br>
+    <div id="paypal-button-container"></div>
+</div>
+
+<script src="https://www.paypal.com/sdk/js?client-id=AfuJfzHChbHucGFxQkML3GhosCN4xNhZR7wzqF8oWvgw9R6k6YcHOo3J1IsGCzYV1NP6Qig1ccnZQcCE&currency=USD&intent=capture&enable-funding=venmo" data-sdk-integration-source="integrationbuilder"></script>
+
+<script>
+    const paypalButtonsComponent = paypal.Buttons({
+        // Optional styling for buttons
+        style: {
+            color: "blue",
+            shape: "pill",
+            layout: "vertical",
+        },
+        // Set up the transaction
+        createOrder: (data, actions) => {
+            const createOrderPayload = {
+                purchase_units: [
+                    {
+                        amount: {
+                            value: '{{ service_price }}' // Fetch service price from context
+                        }
+                    }
+                ]
+            };
+            return actions.order.create(createOrderPayload);
+        },
+        // Finalize the transaction
+        onApprove: (data, actions) => {
+            return actions.order.capture().then(function(details) {
+                window.location.replace("{% url 'payment_success' %}");
+            });
+        },
+        // Handle unrecoverable errors
+        onError: (err) => {
+            console.error('An error prevented the buyer from checking out with PayPal');
+            window.location.replace("{% url 'payment_failed' %}");
+        }
+    });
+
+    paypalButtonsComponent.render("#paypal-button-container")
+        .catch((err) => {
+            console.error('PayPal Buttons failed to render');
+        });
+</script>
+
+
+{% endblock %}

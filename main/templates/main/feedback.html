@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+{% block title %}Add Feedback{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-4 col-xl-8 mb-4">
+      <div class="card card-sm mb-4 h-100 d-flex flex-column mb-4">
+        <div class="card-body">
+          <h2 class="card-header text-success md-3">Provide Feedback</h2>
+          <br>
+          <form id="FeedbackForm" method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                  <label for="id_service_name">Service Name:</label>
+                </div>
+                <div class="col-md-8">
+                  {{ form.service_name }}
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-4">
+                  <label for="id_rating">Rating:</label>
+                </div>
+                <div class="col-md-8">
+                  <select name="rating" id="id_rating">
+                    <option value="1">😢</option> <!-- Sad emoji -->
+                    <option value="2">😞</option> <!-- Disappointed emoji -->
+                    <option value="3">🙂</option> <!-- Neutral emoji -->
+                    <option value="4">😊</option> <!-- Happy emoji -->
+                    <option value="5">🤣</option> <!-- Laughing emoji -->
+                </select>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-4">
+                  <label for="id_comments">Comments:</label>
+                </div>
+                <div class="col-md-8">
+                  {{ form.comments }}
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col-md-8 offset-md-4">
+                  <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // This code ensures that when the "Save" button is clicked, the form is submitted.
+  // You don't need this if you're not performing any additional actions before submitting the form.
+  document.getElementById('FeedbackForm').addEventListener('submit', function(event) {
+      // Prevent the default form submission behavior
+      event.preventDefault();
+      
+      // Submit the form programmatically
+      this.submit();
+  });
+</script>
+{% endblock %}

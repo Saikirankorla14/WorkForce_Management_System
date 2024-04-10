@@ -1,0 +1,39 @@
+{% extends 'main/customer_base.html' %}
+
+{% block title %}Transaction History{% endblock %}
+
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+</head>
+<body>
+    <h1>Transaction History</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Transaction ID</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <!-- Add other fields as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.amount.value }}</td>
+                <td>{{ transaction.amount.currency_code }}</td>
+                <!-- Display other transaction details as needed -->
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No transactions found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

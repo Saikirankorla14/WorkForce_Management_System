@@ -1,0 +1,290 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title></title>
+    <style type="text/css">
+        /* CLIENT-SPECIFIC STYLES */
+        body, table, td, a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table, td {
+            mso-table-lspace: 0;
+            mso-table-rspace: 0;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        /* RESET STYLES */
+        img {
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse !important;
+        }
+
+        body {
+            height: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        /* iOS BLUE LINKS */
+        a[x-apple-data-detectors] {
+            color: inherit !important;
+            text-decoration: none !important;
+            font-size: inherit !important;
+            font-family: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+        }
+
+        .appointment-details li {
+            padding: 0 !important; /* Add padding left to the details */
+        }
+
+        /* MOBILE STYLES */
+        @media screen and (max-width: 500px) {
+            .img-max {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            .max-width {
+                max-width: 100% !important;
+            }
+
+            .mobile-wrapper {
+                width: 85% !important;
+                max-width: 85% !important;
+            }
+
+            .mobile-padding {
+                padding-left: 5% !important;
+                padding-right: 5% !important;
+            }
+        }
+
+        /* ANDROID CENTER FIX */
+        div[style*="margin: 16px 0;"] {
+            margin: 0 !important;
+        }
+    </style>
+</head>
+<body style="margin: 0 !important; padding: 0; !important background-color: #ffffff;" bgcolor="#ffffff">
+
+<!-- HIDDEN PRE-HEADER TEXT -->
+<div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: Open Sans, Helvetica, Arial, sans-serif; max-height: 0; max-width: 0; opacity: 0; overflow: hidden;">
+    {% if pre_header %}
+        {{ pre_header }}
+    {% endif %}
+</div>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td align="center" valign="top" width="100%" bgcolor="#3b4a69"
+            style="background: #3b4a69 url('{% static 'img/email_hd_bg.jpg' %}'); background-size: cover; padding: 50px 15px;"
+            class="mobile-padding">
+            <!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+                <tr>
+                    <td align="center" valign="top" width="600">
+            <![endif]-->
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
+                <tr>
+                    <td align="center" valign="top" style="padding: 0 0 20px 0;">
+                        {% comment %}<!--Add a logo img in future-->{% endcomment %}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top"
+                        style="padding: 0; font-family: Open Sans, Helvetica, Arial, sans-serif;">
+                        <h1 style="font-size: 28px; color: #ffffff;">{{ main_title }}</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top"
+                        style="padding: 0 0 35px 0; font-family: Open Sans, Helvetica, Arial, sans-serif;">
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" width="80%"
+                               style="max-width: 200px;">
+                            <tr>
+                                <td align="center" bgcolor="red"
+                                    style="color: #ffffff; font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 14px; padding: 10px; border-radius: 3px 3px 0 0;">
+                                    {{ month_year }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" bgcolor="#ffffff"
+                                    style="color: #444444; font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 48px; padding: 15px; border-radius: 0 0 3px 3px;">
+                                    {{ day }}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" valign="top"
+                        style="font-family: Open Sans, Helvetica, Arial, sans-serif; padding-bottom: 30px;">
+
+                        <p style="color: #ffffff; font-size: 14px; line-height: 24px; margin: 0;">
+                            {% trans 'Thank you for choosing us.' %}
+                        </p>
+                    </td>
+                </tr>
+
+            </table>
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </td>
+    </tr>
+    <tr style="max-width: 600px !important;">
+        <td align="center" valign="top" width="100%" bgcolor="#ffffff" style="padding: 50px 15px;"
+            class="mobile-padding">
+            <!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="500">
+                <tr>
+                    <td align="center" valign="top" width="500">
+            <![endif]-->
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:500px;">
+                {% if account_details %}
+                    <tr>
+                        <td align="left" valign="top"
+                            style="padding: 0; font-family: Open Sans, Helvetica, Arial, sans-serif;">
+                            <p style="font-size: 14px; margin-top: 15px !important;">Hi {{ first_name }},</p>
+                            <p style="font-size: 14px; margin-top: 5px !important;">{{ message_1 }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top"
+                            style="padding: 0; font-family: Open Sans, Helvetica, Arial, sans-serif;">
+                            <p style="font-size: 14px; margin-top: 5px !important;">{{ message_2 }}</p>
+                        </td>
+                    </tr>
+                    {% if activation_link %}
+                        <tr>
+                            <td align="left" valign="top"
+                                style="padding: 0; font-family: Open Sans, Helvetica, Arial, sans-serif;">
+                                <h3>{% trans 'Account Activation' %}</h3>
+                                <p style="font-size: 14px; margin-top: 15px !important;">
+                                    {% blocktranslate with link=activation_link %}
+                                        To activate your account and set your password, please use the following secure
+                                        link: <a href="{{ link }}" style="color: #1155cc;">Set Your Password</a>. Please
+                                        note that this link will expire in 2 days for your security.
+                                    {% endblocktranslate %}
+                                </p>
+                            </td>
+                        <tr>
+                    {% endif %}
+                </tr>
+                    <tr>
+                        <td align="left" valign="top"
+                            style="font-family: Open Sans, Helvetica, Arial, sans-serif; padding-top: 0;">
+                            <h3>{% trans "Account Information" %}</h3>
+                            <div style="color: #000000; font-size: 14px; line-height: 24px; margin-top: -30px !important;">
+                                <ul>
+                                    {% for key, value in account_details.items %}
+                                        <li>{{ key }}: {{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if more_details %}
+                    <tr>
+                        <td align="left" valign="top"
+                            style="font-family: Open Sans, Helvetica, Arial, sans-serif; padding-top: 0;">
+                            <h3>{% trans "Appointment Details" %}</h3>
+                            <div style="color: #000000; font-size: 14px; line-height: 24px; margin-top: -30px !important;">
+                                <ul>
+                                    {% for key, value in more_details.items %}
+                                        <li>{{ key }}: {{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+
+                        </td>
+                    </tr>
+                {% endif %}
+                {% if reschedule_link %}
+                    <tr>
+                        <td align="left" valign="top"
+                            style="padding: 0; font-family: Open Sans, Helvetica, Arial, sans-serif;">
+                            <h3>{% trans 'Rescheduling' %}</h3>
+                            <p style="margin-top: 15px !important; font-size: 14px">
+                                {% translate 'If your plans change and you need to reschedule your appointment, you can easily do so by following this link: ' %}
+                                <a href="{{ reschedule_link }}">
+                                    {% translate 'Reschedule Appointment' %}
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                {% endif %}
+
+                <tr>
+                    <td align="left" valign="top"
+                        style="padding: 0; font-family: Open Sans, Helvetica, Arial, sans-serif;">
+                        <h3>{% trans 'Support' %}</h3>
+                        <p style="margin-top: 15px !important; font-size: 14px">
+                            {% blocktranslate %}
+                                Should you have any inquiries or require further assistance, our support team is here to
+                                help. You can reach us anytime.
+                            {% endblocktranslate %}
+                        </p>
+                        <p style="margin-top: 15px !important; font-size: 14px">
+                            {% trans "We look forward to serving you and ensuring that your experience with us is both rewarding and satisfactory." %}
+                        </p>
+                        <p style="margin-top: 15px !important; font-size: 14px">{% trans "Warm regards" %},</p>
+                        <p style="margin-top: 15px !important; font-size: 14px">{% trans "The Team" %}</p>
+                    </td>
+                </tr>
+            </table>
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </td>
+    </tr>
+    <tr>
+        <td align="center" height="100%" valign="top" width="100%" bgcolor="#f6f6f6" style="padding: 40px 15px;">
+            <!--[if (gte mso 9)|(IE)]>
+            <table align="center" border="0" cellspacing="0" cellpadding="0" width="600">
+                <tr>
+                    <td align="center" valign="top" width="600">
+            <![endif]-->
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;">
+                <tr>
+                    <td align="center" valign="top"
+                        style="padding: 0; font-family: Open Sans, Helvetica, Arial, sans-serif; color: #999999;">
+                        &copy; {{ current_year }} {{ company }}. {% trans "All rights reserved" %}.
+                    </td>
+                </tr>
+            </table>
+            <!--[if (gte mso 9)|(IE)]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

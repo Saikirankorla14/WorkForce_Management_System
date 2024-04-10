@@ -1,0 +1,32 @@
+
+
+{% extends 'main/admin_base.html' %}
+
+{% block title %}
+    Refund Customer
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+        
+            <div class="col-lg-4 col-xl-8 mb-4">
+                <div class="card card-sm mb-4 h-100 d-flex flex-column mb-4">
+                    <div class="card-body">
+                        <h2 class="card-header text-success md-3">Refund Customer</h2>
+                        <br>
+                        <form method="post">
+                            {% csrf_token %}
+                            <label for="transaction_id">Transaction ID:</label><br>
+                            <input type="text" id="transaction_id" name="transaction_id" required>
+                            <br>
+                            <br>
+                            <input type="submit" class="btn btn-success" value="Refund">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}

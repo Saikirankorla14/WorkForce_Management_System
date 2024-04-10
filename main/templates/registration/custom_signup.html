@@ -1,0 +1,167 @@
+r{% extends 'main/base.html' %} 
+{% load static %}
+{% block title %}Sign Up{% endblock %} 
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 d-flex flex-column">
+              <div>
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp" class="img-fluid">
+              </div> 
+              <div class="card-header text-center">
+                <strong class="text-success">Sign Up</strong>
+              </div>
+              <div class="card-body d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+
+              <form method="post">
+                {% csrf_token %} {% if form.errors %}
+                <div class="alert alert-danger">
+                  <strong>Error:</strong> Please check the following fields:
+                  <ul>
+                    {% for field in form %} {% for error in field.errors %}
+                    <li>{{ field.label_tag }}: {{ error }}</li>
+                    {% endfor %} {% endfor %}
+                  </ul>
+                </div>
+                {% endif %}
+
+                <div class="d-flex flex-row align-items-center mb-3">
+                  <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                  <div class="form-floating mb-1">
+                   {{ form.full_name }}
+                    <label for="{{ form.full_name.id_for_label }}">Full Name</label>
+                  </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-3">
+                  <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                  <div class="form-floating mb-1">
+                     {{ form.username }} 
+                     <label for="{{ form.username.id_for_label }}">Username</label>
+                  </div>
+                </div>
+
+                {% comment %} <div class="d-flex flex-row align-items-center mb-3">
+                  <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                     <div class="form-floating mb-1">
+                      {{ form.role }}
+                     </div>
+                </div> {% endcomment %}
+
+                <div class="d-flex flex-row align-items-center mb-3">
+                  <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                  <div class="form-floating mb-1">
+                    {{ form.email }}
+                      <label for="{{ form.email.id_for_label }}">Email</label>
+                  </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-3">
+                    <i class="fas fa-calendar-alt fa-lg me-3 fa-fw"></i>
+                    <div class="form-floating mb-1">
+                        {{ form.birth_year }}
+                        <label for="{{ form.birth_year.id_for_label }}">Year of Birth</label>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-3">
+                    <i class="fas fa-venus-mars fa-lg me-3 fa-fw"></i>
+                    <div class="form-floating mb-1">
+                        {{ form.gender }}
+                    </div>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-3">
+                    <i class="fas fa-id-card fa-lg me-3 fa-fw"></i>
+                    <div class="form-floating mb-1">
+                        {{ form.national_id }}
+                        <label for="{{ form.national_id.id_for_label }}">National ID</label>
+                    </div>
+                </div>
+
+            <div class="d-flex flex-row align-items-center mb-3">
+                <i class="fas fa-phone fa-lg me-3 fa-fw"></i>
+                <div class="form-floating mb-1" style="width: 59%;">
+                    {{ form.phone_number }}
+                    <label for="{{ form.phone_number.id_for_label }}">Phone</label>
+                </div>
+                <div class="form-floating mb-1 ms-4" style="width: 41%;">
+                    {{ form.phone_belongs_to_user }}
+                    <label for="{{ form.phone_belongs_to_user.id_for_label }}"></label>
+                </div>
+              </div>
+               
+               
+               <div class="mb-3" id="relationshipField" style="display: none;">
+                    <input type="text" class="form-control" id="phoneOwner" name="phone_number_owner" placeholder="What is your relationship with the owner?" disabled>
+                </div>
+
+                <div class="d-flex flex-row align-items-center mb-2">
+                    <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                    <div class="form-floating mb-3">
+                      {{ form.password1 }}
+                      <label for="{{ form.password1.id_for_label }}">Password</label>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-row align-items-center mb-3">
+                    <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                    <div class="form-floating mb-3">
+                      {{ form.password2 }}
+                      <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+                        <div class="input-group-append mt-3">
+                        <div class="input-group-text">
+                          <input type="checkbox" onclick="togglePasswordVisibility('{{ form.password1.id_for_label }}', '{{ form.password2.id_for_label }}')" class="me-2">
+                          <label class="form-check-label">Show Password</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                <div class="form-check d-flex justify-content-center mb-1">
+                  <label class="form-check-label" for="form2Example3">
+                    Have an account? <a href="/login">Login</a>
+                  </label>
+                </div>
+
+                  <div class="d-flex justify-content-center mb-4">
+                    <button type="submit" class="btn btn-success">Register</button>
+                  </div>
+              </form>
+                
+              </div>
+            </div>
+        </div>
+  </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+function togglePasswordVisibility(passwordId1, passwordId2) {
+  var passwordInput1 = document.getElementById(passwordId1);
+  var passwordInput2 = document.getElementById(passwordId2);
+
+  passwordInput1.type = passwordInput1.type === "password" ? "text" : "password";
+  passwordInput2.type = passwordInput2.type === "password" ? "text" : "password";
+}
+
+ document.addEventListener('DOMContentLoaded', function () {
+        var phoneBelongsToUser = document.getElementById('{{ form.phone_belongs_to_user.id_for_label }}');
+        var relationshipField = document.getElementById('relationshipField');
+        var phoneOwnerInput = document.getElementById('phoneOwner');
+
+        phoneBelongsToUser.addEventListener('change', function () {
+            if (this.value === 'No') {
+                relationshipField.style.display = 'block';
+                phoneOwnerInput.disabled = false;
+            } else {
+                relationshipField.style.display = 'none';
+                phoneOwnerInput.disabled = true;
+            }
+        });
+    });
+</script>
+{% endblock %}
+

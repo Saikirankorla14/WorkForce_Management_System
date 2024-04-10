@@ -1,0 +1,31 @@
+{% extends 'main/worker_base.html' %}
+
+{% block title %}
+    View Task
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+        
+            <div class="col-lg-4 col-xl-8 mb-4">
+                <div class="card card-sm mb-4 h-100 d-flex flex-column mb-4">
+                    <div class="card-body">
+                        <h2 class="card-header text-success md-3">{{ task.name }}</h2>
+                        <br>
+                        <p>Description: {{ task.description }}</p>
+                        <p>Progress: {{ task.progress }}%</p>
+                        <a href="{% url 'update_task' task.id %}" class="btn btn-primary">Update</a>
+                        
+                        <form action="{% url 'delete_task' task.id %}" method="post">
+                            {% csrf_token %}
+                            <br>
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'main/customer_base.html' %}
+
+{% block title %}Payment Success{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-4 col-xl-8 mb-4">
+      <div class="card card-sm mb-4 h-100 d-flex flex-column mb-4">
+        <div class="card-body">
+          <div class="text-center">
+            <i class="text-success fa fa-credit-card-alt fa-3x" aria-hidden="true"></i>
+            <br><br>
+            <h5><strong>Payment success!</strong></h5>
+            <hr>
+            <p>Your order was processed successfully.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
