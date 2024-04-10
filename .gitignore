@@ -1,0 +1,9 @@
+farm_management_web/__pycache__/
+main/__pycache__/
+
+.env
+farm-env/
+*.pyc
+main/migrations/*.py
+staticfiles/
+
