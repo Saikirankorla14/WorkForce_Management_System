@@ -6,7 +6,8 @@ import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.views import LoginView
-
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from main.services import handle_service_management_request
 from main.utils.json_context import get_generic_context_with_extra
 from .forms import ClockInOutForm, FeedbackForm, LeaveForm, PaymentForm, PaymentWorkerForm, RegisterForm, LoginForm, CustomUserUpdateForm, FarmForm, PersonForm, RegisterForm, FarmPhotoForm, SchedulerForm, ServiceForm, TaskForm
@@ -26,11 +27,10 @@ from asgiref.sync import async_to_sync
 import logging
 logger = logging.getLogger(__name__)
 from django.db import transaction
-from datetime import datetime, timezone, timedelta
+import datetime
 from django.views.decorators.http import require_POST
 from .models import ProcessedMessage
 from django.utils.translation import gettext_lazy as _
-import datetime
 import json
 import paypalrestsdk
 from django.contrib import messages
@@ -38,7 +38,13 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
-
+from reportlab.lib.styles import ParagraphStyle
+from reportlab.lib import colors, utils
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph
+from reportlab.lib.units import inch
 from main.decorators import (
     require_ajax, require_staff_or_superuser, require_superuser, require_user_authenticated)
 from main.forms import PersonalInformationForm, ServiceForm, StaffAppointmentInformationForm
@@ -1339,7 +1345,7 @@ def delete_service(request, service_id):
     service = get_object_or_404(Service, pk=service_id)
     service.delete()
     messages.success(request, _("Service deleted successfully!"))
-    return redirect('user_profile')
+    return redirect('admin_view')
 
 
 ###############################################################
@@ -2089,8 +2095,11 @@ def transaction_history(request):
 @user_passes_test(lambda u: u.groups.filter(name__in=['farmer']).exists())
 @login_required(login_url="/login")
 def calendar_view(request):
+    # Normalize username before filtering appointments
+    normalized_username = request.user.username.lower()
+
     # Filter appointments for the logged-in user
-    user_appointments = Appointment.objects.filter(client=request.user)
+    user_appointments = Appointment.objects.filter(client__username__iexact=normalized_username)
     
     # Pass appointment data to the template
     appointments_data = []
@@ -2324,3 +2333,179 @@ def feedback_details(request):
         user = CustomUser.objects.get(id=feedback.user_id)
         feedback.user_name = user.username  # Add user name to each feedback object
     return render(request, 'main/feedback_details.html', {'feedbacks': feedbacks})
+
+def generate_report(request, timeframe):
+    # Get client name from request user
+    current_date = datetime.now().strftime('%Y-%m-%d')
+    client_name = request.user.username.lower()
+
+    # Define start and end dates based on the selected timeframe
+    if timeframe == 'daily':
+        start_date = datetime.now().date()
+        end_date = start_date + timedelta(days=1)
+    elif timeframe == 'weekly':
+        start_date = datetime.now().date() - timedelta(days=datetime.now().weekday())
+        end_date = start_date + timedelta(weeks=1)
+    elif timeframe == 'monthly':
+        start_date = datetime(datetime.now().year, datetime.now().month, 1).date()
+        end_date = start_date.replace(day=1, month=start_date.month+1)
+    elif timeframe == 'yearly':
+        start_date = datetime(datetime.now().year, 1, 1).date()
+        end_date = start_date.replace(year=start_date.year+1)
+
+    # Get appointments of the logged-in client within the selected timeframe
+    client_appointments = Appointment.objects.filter(client__username__iexact=client_name,
+                                                     created_at__date__gte=start_date,
+                                                     created_at__date__lt=end_date)
+
+    # Filter paid appointments
+    paid_appointments = client_appointments.filter(paid=True)
+
+    # Calculate total payment
+    total_payment = sum(appointment.amount_to_pay for appointment in paid_appointments)
+
+    # Get client details from the first paid appointment
+    first_paid_appointment = paid_appointments.first()
+    if first_paid_appointment:
+        client_address = first_paid_appointment.address
+        client_phone = str(first_paid_appointment.phone)  # Convert PhoneNumber object to string
+    else:
+        client_address = ""
+        client_phone = ""
+
+    # Create a response object
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="appointment_report.pdf"'
+
+    # Create a PDF document
+    doc = SimpleDocTemplate(response, pagesize=letter)
+    elements = []
+
+    # Define the styles
+    styles = getSampleStyleSheet()
+    normal_style = styles["Normal"]
+    bold_style = styles["Heading2"]
+    title_style = ParagraphStyle(
+        name='TitleStyle',
+        fontSize=16,
+        textColor=colors.black,
+        alignment=1,
+        backColor=colors.lightblue,  # Set the background color
+        spaceAfter=10,  # Add space after the paragraph
+        width=doc.width
+    )
+    normal_style = ParagraphStyle(
+        name='NormalStyle',
+        fontSize=12,
+        textColor=colors.black,
+        alignment=2,  # Left alignment
+        spaceAfter=5  # Add space after the paragraph
+    )
+    # Add title with center alignment and background color
+    title_text = f"Services Report ({timeframe.capitalize()})"
+    title_table = Table([[title_text]], colWidths=[doc.width])
+    title_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.lightblue),  # Background color
+        ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),  # Text color
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center alignment
+        ('FONTSIZE', (0, 0), (-1, -1), 14),
+    ]))
+
+    elements.append(title_table)
+
+    # Add space between title and client details
+    elements.append(Spacer(1, 20))
+
+    # Add client details with light gray background
+    client_details_info = [
+        ("Date:", current_date),
+        ("Client:", client_name),
+        ("Client Address:", client_address),
+        ("Client Phone:", client_phone)
+    ]
+    client_details_table = Table(client_details_info, colWidths=[100, 200])
+    client_details_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, -1), colors.lightgrey),  # Background color
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),  # Vertical alignment to top
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),  # Left alignment
+        ('LEFTPADDING', (0, 0), (-1, -1), 20),  # Left padding
+    ]))
+    elements.append(client_details_table)
+
+    # Add space between client details and table
+    elements.append(Spacer(1, 50))
+
+    # Add services table with larger cell padding and background color for header
+    services_info = [
+        ["Service", "Worker", "Appointment Date", "Start Time", "End Time",  "Price"]
+    ]
+    for appointment in paid_appointments:
+        services_info.append([
+            appointment.get_service_name(),
+            appointment.get_staff_member_name(),
+            appointment.created_at.strftime('%Y-%m-%d'),
+            appointment.created_at.strftime('%H:%M'),
+            appointment.created_at.strftime('%H:%M'),
+            "${:.2f}".format(appointment.amount_to_pay)
+        ])
+    services_table = Table(services_info, colWidths=[120, 110, 90, 70, 60, 100])
+    services_table.setStyle(TableStyle([
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightblue),  # Background color for header
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 10),  # Larger cell padding
+    ]))
+    elements.append(services_table)
+
+    # Add total payment to the right
+    total_payment_text = "Total Payment: ${:.2f}".format(total_payment)
+    total_payment_paragraph = Paragraph(total_payment_text, normal_style)
+    
+    elements.append(total_payment_paragraph)
+
+    # Build the PDF document
+    doc.build(elements)
+
+    return response
+
+@user_passes_test(lambda u: u.groups.filter(name__in=['farmer']).exists())
+@login_required(login_url="/login") 
+def generate(request):
+    return render(request, 'main/report.html')
+
+def send_service_details(request):
+    if request.method == 'POST':
+        appointment_id = request.POST.get('appointment_id')
+        print("Received appointment ID:", appointment_id) 
+        appointment = Appointment.objects.get(pk=appointment_id)
+        worker_email = 'arj831758@gmail.com'
+        
+        service_details = {
+            'service_name': appointment.get_service_name(),
+            'start_time': appointment.get_start_time(),
+            'end_time': appointment.get_end_time(),
+            'client_name': appointment.get_client_name(),
+            'client_address': appointment.address,
+            'client_phone' : appointment.phone,
+            'worker_name' : appointment.get_staff_member_name().capitalize()
+            # Add more service details as needed
+        }
+        send_service_details_email(worker_email, service_details)
+        return HttpResponse('Email sent successfully')
+
+    appointments = Appointment.objects.all()
+    return render(request, 'main/send_service_details.html', {'appointments': appointments})
+
+def send_service_details_email(worker_email, service_details):
+    # Render email template
+    context = {'service_details': service_details}
+    html_message = render_to_string('main/email.html', context)
+    plain_message = strip_tags(html_message)
+    # Send email
+    send_mail(
+        'Confirmation of Appointment and Service Details',
+        plain_message,
+        settings.EMAIL_HOST_USER,
+        [worker_email],
+        html_message=html_message,
+    )

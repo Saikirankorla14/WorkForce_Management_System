@@ -1,0 +1,57 @@
+{% extends 'main/admin_base.html' %}
+{% block title %}Send Service Details{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+  
+      <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h2 class="card-header text-success md-3">Select Appointment to Send Service Details</h2>
+              <br>
+              <br>
+              <form id="sendServiceDetailsForm">
+                <div class="form-group">
+                  <select name="appointment_id" id="appointmentSelect" class="form-control mb-3">
+                      {% for appointment in appointments %}
+                          <option value="{{ appointment.id }}">{{ appointment }}</option>
+                      {% endfor %}
+                  </select>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Send Service Details</button>
+              </form>
+            </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<script>
+    document.getElementById('sendServiceDetailsForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var formData = new FormData(this);  // Create FormData object from the form
+        sendServiceDetails(formData);  // Pass formData to sendServiceDetails function
+    });
+    
+    function sendServiceDetails(formData) {
+        fetch('/send-service-details/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData  // Send form data directly
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Email sent successfully');
+            } else {
+                alert('Failed to send email');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+</script>
+{% endblock %}

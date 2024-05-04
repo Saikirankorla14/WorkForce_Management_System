@@ -21,6 +21,17 @@
                 <div class="section-header">
                     <h2 class="section-header-itm">{% trans 'Staff Members' %}</h2>
                     <div class="buttons-container section-header-itm">
+
+                        
+                        <a href="{% url 'send_service_details'%}" class="modify-btn button-color-green">
+                            <i class="far fa-paper-plane"></i> Send
+                        </a>
+                        
+                        
+                        <a href="{% url 'attendance_list' %}" class="modify-btn button-color-blue">
+                            <i class="far fa-calendar-check"></i> Attendance
+                        </a>
+                        
                         <a href="{{ btn_staff_me_link }}"
                            class="modify-btn button-color-purple">
                             {{ btn_staff_me }}

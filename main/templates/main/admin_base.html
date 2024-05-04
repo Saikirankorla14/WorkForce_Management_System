@@ -35,11 +35,7 @@
                     <!-- Add your authenticated user navigation links here -->
                     {% comment %} <li><a class="nav-link btn text-success ms-auto" href="{% url 'index' %}"><i class="fas fa-home"></i> Home</a></li> {% endcomment %}
                     <li class="nav-item btn text-success ms-auto "><a href="{% url 'index' %}" class="text-success text-decoration-none"><i class="fas fa-home"></i> Home</a></li>
-                    <li class="nav-item btn text-success ms-auto">
-                        <a href="{% url 'add_service' %}" class="text-success text-decoration-none">
-                            <i class="fas fa-plus-circle"></i> Add Service
-                        </a>
-                    </li>
+                    
                     
                     
                     <li class="nav-item btn text-success ms-auto">
@@ -48,11 +44,7 @@
                         </a>
                     </li>
                     
-                    <li class="nav-item btn text-success ms-auto">
-                        <a href="{% url 'attendance_list' %}" class="text-success text-decoration-none">
-                            <i class="far fa-user-check"></i> Attendance
-                        </a>
-                    </li>
+                    
 
                     <li class="nav-item btn text-success ms-auto">
                         <a href="{% url 'make_superuser_staff_member' %}" class="text-success text-decoration-none">
@@ -77,6 +69,8 @@
                             <i class="far fa-credit-card"></i> Worker Payments
                         </a>
                     </li>
+
+                    
 
                     <li class="nav-item btn text-success ms-auto">
                         <a href="{% url 'feedback_details'%}" class="text-success text-decoration-none">

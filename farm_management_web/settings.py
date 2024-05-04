@@ -18,11 +18,7 @@ from django.core.management.utils import get_random_secret_key
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 LOGIN_URL = '/login/'
-<<<<<<< HEAD
-AUTH_USER_MODEL = 'main.CustomUser.groups'
-=======
 
->>>>>>> 0934cdc065be7610754eed0b08bec2b0ef44105c
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -170,11 +166,7 @@ TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
-<<<<<<< HEAD
-USE_TZ = True
-=======
 USE_TZ = False
->>>>>>> 0934cdc065be7610754eed0b08bec2b0ef44105c
 
 
 # Static files (CSS, JavaScript, Images)
@@ -245,9 +237,4 @@ Q_CLUSTER = {
     'queue_limit': 50,
     'bulk': 10,
     'orm': 'default',
-<<<<<<< HEAD
 }
-
-=======
-}
->>>>>>> 0934cdc065be7610754eed0b08bec2b0ef44105c

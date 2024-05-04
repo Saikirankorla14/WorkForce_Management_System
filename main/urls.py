@@ -156,4 +156,7 @@ urlpatterns = [
     path('pay-worker/<int:staff_user_id>/', views.pay_worker, name='pay_worker'),
     path('payment-details/', views.payment_details, name='payment_details'),
     path('feedback-details/', views.feedback_details, name='feedback_details'),
+    path('generate/', views.generate, name='generate'),
+    path('generate-report/<str:timeframe>/', views.generate_report, name='generate_report'),
+    path('send-service-details/', views.send_service_details, name='send_service_details'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

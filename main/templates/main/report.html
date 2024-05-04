@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+{% block title %}Generate Report{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-4 col-xl-8 mb-4">
+      <div class="card card-sm mb-4 h-100 d-flex flex-column mb-4">
+        <div class="card-body">
+          <h2 class="card-header text-success md-3">Generate Report</h2>
+          <br>
+          <label for="timeframe">Select Timeframe:</label>
+          <select id="timeframe" name="timeframe_selection">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+          <br>
+          <button onclick="generateReport()" class="btn btn-primary mt-3">Generate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function generateReport() {
+        // Get the selected timeframe
+        var selectedTimeframe = document.getElementById("timeframe").value;
+
+        // Redirect to the generate report URL with the selected timeframe
+        window.location.href = "/generate-report/" + selectedTimeframe + "/";
+    }
+</script>
+{% endblock %}

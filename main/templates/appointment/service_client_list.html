@@ -28,6 +28,7 @@
                             <th>{% trans 'Name' %}</th>
                             <th>{% trans 'Duration' %}</th>
                             <th>{% trans 'Price' %}</th>
+                            <th>{% trans 'Down Payment' %}</th>
                             <th>{% trans 'Action' %}</th>
                         </tr>
                         </thead>
@@ -37,6 +38,7 @@
                                 <td>{{ service.name }}</td>
                                 <td>{{ service.get_duration }}</td>
                                 <td>{{ service.get_price_text }}</td>
+                                <td>{{ service.get_down_payment_text }}</td>
                                 <td>
                                     <div class="buttons-container">
                                         

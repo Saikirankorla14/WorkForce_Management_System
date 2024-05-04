@@ -1,0 +1,45 @@
+/* Define the list of background images */
+#dynamic-background {
+    background-repeat: no-repeat;
+    background-size: cover;
+    animation: backgroundAnimation 20s linear infinite; /* Adjust the duration as needed */
+    background-image: url("/static/images/background1.jpeg"); /* Relative or absolute URL to your image */
+}
+
+@keyframes backgroundAnimation {
+    0% {
+        background-image: url("/static/images/background1.jpeg");
+    }
+    33% {
+        background-image: url("/static/images/background2.jpeg");
+    }
+    66% {
+        background-image: url("/static/images/background3.jpeg");
+    }
+    100% {
+        background-image: url("/static/images/background4.jpeg");
+    }
+}
+
+    .photo-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .photo-description {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        padding: 15px; /* Increased padding */
+        font-size: 16px; /* Increased font size */
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+
+    .photo-container:hover .photo-description {
+        opacity: 1;
+    }
+

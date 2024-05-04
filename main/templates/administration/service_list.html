@@ -20,7 +20,11 @@
             <section class="profile-section">
                 <div class="section-header">
                     <h2 class="section-header-itm">{% trans 'Service List' %}</h2>
+                    <a href="{% url 'add_service' %}" class="modify-btn button-color-blue">
+                        <i class="fas fa-plus"></i> {% trans 'Add Service' %}
+                    </a>
                 </div>
+                
                 <div class="responsive-table-container">
                     <table>
                         <thead>
@@ -28,6 +32,7 @@
                             <th>{% trans 'Name' %}</th>
                             <th>{% trans 'Duration' %}</th>
                             <th>{% trans 'Price' %}</th>
+                            <th>{% trans 'Down Payment' %}</th>
                             <th>{% trans 'Action' %}</th>
                         </tr>
                         </thead>
@@ -37,6 +42,7 @@
                                 <td>{{ service.name }}</td>
                                 <td>{{ service.get_duration }}</td>
                                 <td>{{ service.get_price_text }}</td>
+                                <td>{{ service.get_down_payment_text }}</td>
                                 <td>
                                     <div class="buttons-container">
                                         <a href="{% url 'view_service' service_id=service.id view=1 %}"
@@ -49,16 +55,11 @@
                                                class="modify-btn button-color-blue">
                                                 <i class="fas fa-pen"></i>
                                             </a>
-                                            <a href="javascript:void(0)"
-                                               onclick="showModal('{{ modal_title }}', '{{ d_modal_message }}', '{{ delete_btn_modal }}', '{% url 'delete_service' service_id=service.id %}', null)"
-                                               class="modify-btn button-color-red">
+                                            <a href="#" id="delete-service-btn" data-service-id="{{ service.id }}" class="modify-btn button-color-red service-btn">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         {% endif %}
-                                        <a href="{% url 'appointment_request' service_id=service.id  %}"
-                                           class="modify-btn button-color-green">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
+                                        
                                     </div>
                                 </td>
                             </tr>
@@ -84,5 +85,39 @@
 {% endblock %}
 
 {% block customJS %}
-    <script src="{% static 'js/js-utils.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteBtn = document.getElementById('delete-service-btn');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent the default anchor behavior
+                    const serviceId = deleteBtn.getAttribute('data-service-id');
+                    deleteService(serviceId);
+                });
+            }
+        });
+        
+        function deleteService(serviceId) {
+            // Send an AJAX request to delete the service
+            fetch(`/delete-service/${serviceId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}' // Include CSRF token for Django
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Service deleted successfully, update UI or redirect
+                    window.location.reload(); // Reload the page to reflect changes
+                } else {
+                    // Handle error response
+                    console.error('Failed to delete service:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting service:', error);
+            });
+        }
+        
+    </script>
 {% endblock %}

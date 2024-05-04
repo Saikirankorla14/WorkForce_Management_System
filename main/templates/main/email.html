@@ -1,0 +1,30 @@
+<!-- service_details.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Details</title>
+</head>
+<body>
+    <h1>Service Details</h1>
+    <p>Dear {{ service_details.worker_name }},</p>
+    
+    <p>This email is to inform you about the details of the upcoming service appointment:</p>
+    
+    <ul>
+        <li><strong>Service Name:</strong> {{ service_details.service_name }}</li>
+        <li><strong>Start Time:</strong> {{ service_details.start_time }}</li>
+        <li><strong>End Time:</strong> {{ service_details.end_time }}</li>
+        <li><strong>Client Name:</strong> {{ service_details.client_name }}</li>
+        <li><strong>Client Address:</strong> {{ service_details.client_address }}</li>
+        <li><strong>Client PhoneNumber:</strong> {{ service_details.client_phone }}</li>
+       
+    </ul>
+
+    <p>Please ensure that you are prepared for the appointment and arrive on time.</p>
+
+    <p>Thank you!</p>
+</body>
+</html>
