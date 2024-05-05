@@ -48,10 +48,8 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'fontawesomefree',
     'channels',
-    'channels_redis',
     'debug_toolbar',
     'widget_tweaks',
-    'django_q',
     'mathfilters',
     'storages',
     
@@ -229,12 +227,3 @@ LOGGING = {
     },
 }
 
-Q_CLUSTER = {
-    'name': 'DjangORM',
-    'workers': 4,
-    'timeout': 90,
-    'retry': 120,
-    'queue_limit': 50,
-    'bulk': 10,
-    'orm': 'default',
-}
